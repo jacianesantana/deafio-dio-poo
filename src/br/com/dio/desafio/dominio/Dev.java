@@ -5,10 +5,19 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-public class Dev {
+public class Dev implements Comparable<Dev> {
     private String nome;
     private Set<Conteudo> conteudosInscritos = new LinkedHashSet<>();
     private Set<Conteudo> conteudosConcluidos = new LinkedHashSet<>();
+
+    @Override
+    public String toString() {
+        return "Dev{" +
+                "nome='" + nome + '\'' +
+                ", conteudosInscritos=" + conteudosInscritos +
+                ", conteudosConcluidos=" + conteudosConcluidos +
+                '}';
+    }
 
     public void inscreverBootcamp(Bootcamp bootcamp) {
         this.conteudosInscritos.addAll(bootcamp.getConteudos());
@@ -30,6 +39,14 @@ public class Dev {
                 .stream()
                 .mapToDouble(Conteudo::calcularXp)
                 .sum();
+    }
+
+    public void emitirCertificado() {
+        if (conteudosInscritos.isEmpty()) {
+            System.out.println("Parabéns, Bootcamp concluído! Certificado gerado com sucesso!");
+        } else {
+            System.out.println("Complete o seu Bootcamp para ter o certificado.");
+        }
     }
 
     public String getNome() {
@@ -67,5 +84,15 @@ public class Dev {
     @Override
     public int hashCode() {
         return Objects.hash(nome, conteudosInscritos, conteudosConcluidos);
+    }
+
+    @Override
+    public int compareTo(Dev outroDev) {
+        if (this.calcularTotalXp() > outroDev.calcularTotalXp()) {
+            return -1;
+        } if (this.calcularTotalXp() < outroDev.calcularTotalXp()) {
+            return 1;
+        }
+        return 0;
     }
 }
